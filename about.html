@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About Us - LinkShort</title>
+    <link rel="stylesheet" href="/src/style.css">
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans">
+    <div x-data x-init="$store.theme.init()">
+        <div class="min-h-screen flex items-center justify-center p-4">
+            <div class="max-w-2xl w-full bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8 md:p-12 page-content">
+                <div class="text-center">
+                    <h1 class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">About LinkShort</h1>
+                    <p class="mt-4 text-lg text-gray-600 dark:text-gray-300">
+                        LinkShort is a free and easy-to-use URL shortening service designed to help you transform long, cumbersome links into short, memorable, and shareable URLs.
+                    </p>
+                </div>
+                
+                <div class="mt-10 text-left">
+                    <h2 class="text-2xl font-bold text-center">Our Mission</h2>
+                    <p class="mt-2 text-gray-600 dark:text-gray-300">
+                        Our mission is to provide a fast, reliable, and straightforward tool for everyone. Whether you're a marketer, a content creator, or just someone who wants to clean up their links, LinkShort is here to help.
+                    </p>
+
+                    <h2 class="text-2xl font-bold text-center mt-8">Our Features</h2>
+                    <ul class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-6 text-center">
+                        <li class="bg-gray-100 dark:bg-gray-700 p-6 rounded-lg">
+                            <h3 class="font-bold text-primary">Instant Shortening</h3>
+                        </li>
+                        <li class="bg-gray-100 dark:bg-gray-700 p-6 rounded-lg">
+                            <h3 class="font-bold text-primary">One-Click Copy</h3>
+                        </li>
+                        <li class="bg-gray-100 dark:bg-gray-700 p-6 rounded-lg">
+                            <h3 class="font-bold text-primary">Local History</h3>
+                        </li>
+                        <li class="bg-gray-100 dark:bg-gray-700 p-6 rounded-lg">
+                            <h3 class="font-bold text-primary">No Registration</h3>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="mt-12 text-center">
+                    <a href="/" class="text-primary hover:underline">
+                        &larr; Back to LinkShort
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html> 

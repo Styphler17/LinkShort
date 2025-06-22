@@ -33,6 +33,31 @@ LinkShort uses **Google AdSense Auto Ads** for optimal revenue generation:
 | 100,000 | $1,500-7,500 |
 | 1,000,000 | $15,000-75,000 |
 
+## 🌐 Domain & Subdomain Support
+
+### AdSense Subdomain Support ✅
+
+**Yes, Google AdSense supports subdomains!** Here's what you need to know:
+
+#### ✅ What Works:
+- **Your own domain subdomains** (e.g., `linkshort.yourdomain.com`)
+- **Same publisher ID** across all subdomains
+- **Multiple subdomains** under one AdSense account
+
+#### ❌ What Doesn't Work:
+- **Google Sites subdomains** (limited AdSense support)
+- **Free hosting service subdomains** (blogspot, wordpress.com, etc.)
+- **Subdomains without proper domain ownership**
+
+#### 🚀 Recommended Setup:
+1. **Use your own domain** (not Google Sites)
+2. **Deploy to proper hosting** (Netlify, Vercel, GitHub Pages)
+3. **Apply for AdSense** with main domain first
+4. **Add subdomain** after approval
+5. **Use same publisher ID** for all subdomains
+
+**📖 See [Subdomain AdSense Guide](docs/Subdomain-AdSense-Guide.md) for detailed setup instructions.**
+
 ## How It Works
 
 LinkShort generates short URLs in the format `yourdomain.com/?r=abc1234`. When someone visits this URL:

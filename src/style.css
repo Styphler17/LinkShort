@@ -26,6 +26,16 @@
   }
 }
 
+@layer utilities {
+  .page-content p {
+    line-height: 45px;
+  }
+  .prose h2 { @apply text-2xl font-bold mt-10 mb-4 text-gray-800 dark:text-white; }
+  .prose a { @apply text-primary hover:text-secondary transition-colors; }
+  .prose ul { @apply list-disc list-inside space-y-2 pl-4; }
+  .prose code { @apply bg-gray-200 dark:bg-gray-700 rounded-md px-2 py-1 text-sm; }
+}
+
 /* Scoped blob animation */
 .card::before,
 .card::after {
