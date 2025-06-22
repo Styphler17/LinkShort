@@ -1,0 +1,31 @@
+{
+  "pageTitle": "LinkShort - URL Shortener",
+  "header": {
+    "title": "LinkShort",
+    "subtitle": "Shorten your URLs with ease"
+  },
+  "form": {
+    "label": "Enter your long URL",
+    "placeholder": "https://example.com/very-long-url",
+    "button": "Make It!",
+    "generating": "Making it..."
+  },
+  "result": {
+    "title": "Your shortened URL:"
+  },
+  "history": {
+    "title": "Recent Links",
+    "clear": "Clear History",
+    "check": "Check Your Link History"
+  },
+  "copy": {
+    "default": "Copy",
+    "copied": "Copied!"
+  },
+  "welcome": {
+    "title": "Welcome to LinkShort",
+    "line1": "Easy to create instantly",
+    "line2": "Share it quickly",
+    "line3": "Get History of Links"
+  }
+} 

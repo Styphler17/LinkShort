@@ -1,22 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* Custom styles for LinkShort */
 @layer components {
+  /* Buttons */
   .btn-primary {
-    @apply bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200;
+    @apply bg-primary hover:bg-opacity-90 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed;
   }
   
   .btn-secondary {
-    @apply bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg transition-colors duration-200;
+    @apply bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
   }
   
+  /* Form Inputs */
   .input-field {
-    @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200;
+    @apply w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-900 dark:bg-opacity-50 text-gray-800 dark:text-white rounded-lg focus:ring-2 focus:ring-primary dark:focus:ring-secondary focus:border-transparent transition-all duration-200;
   }
   
+  /* Main Card */
   .card {
-    @apply bg-white rounded-xl shadow-lg p-6 border border-gray-100;
+    @apply bg-white dark:bg-gray-800 dark:bg-opacity-50 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-gray-200 dark:border-gray-700 relative overflow-hidden;
   }
+}
+
+/* Scoped blob animation */
+.card::before,
+.card::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.1;
+  pointer-events: none;
+}
+.dark .card::before { opacity: 0.2; }
+.dark .card::after { opacity: 0.3; }
+
+.card::before {
+  width: 250px;
+  height: 250px;
+  background-color: #ec4899; /* Pink */
+  top: -50px;
+  left: -80px;
+  animation: move-blob-1 20s infinite linear;
+}
+
+.card::after {
+  width: 300px;
+  height: 300px;
+  background-color: #8b5cf6; /* Purple */
+  bottom: -60px;
+  right: -90px;
+  animation: move-blob-2 25s infinite linear;
+}
+
+@keyframes move-blob-1 {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(100px, 50px) scale(1.2); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+
+@keyframes move-blob-2 {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-80px, -60px) scale(0.9); }
+  100% { transform: translate(0, 0) scale(1); }
 }

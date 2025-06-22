@@ -4,125 +4,144 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/LinkShort-Favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LinkShort - URL Shortener</title>
+    <title>LinkShort</title>
   </head>
-  <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen font-sans">
-    <div id="app" x-data="linkShort" class="container mx-auto p-8">
+  <body class="bg-gray-100 dark:bg-dark text-gray-800 dark:text-white font-sans transition-colors duration-300">
+    
+    <div id="app" x-data="linkShort" x-init="() => { $store.theme.init(); $store.i18n.init(); }" class="container mx-auto p-4 md:p-8 min-h-screen flex flex-col">
+      
       <!-- Header -->
-      <header class="text-center mb-16">
-        <div class="flex justify-center items-center">
-            <img src="/LinkShort-logo.png" alt="LinkShort Logo" class="h-40">
+      <header class="flex items-center justify-between mb-8">
+        <div class="flex items-center">
+          <img src="/LinkShort-logo.png" alt="LinkShort Logo" class="h-12 md:h-16 dark:invert">
         </div>
-        <p class="text-gray-600 mt-2">Shorten your URLs with ease</p>
-      </header>
-
-      <!-- Main Content Grid -->
-      <main class="grid grid-cols-1 lg:grid-cols-3 lg:gap-8">
         
-        <!-- Left Column: Main Form -->
-        <div class="lg:col-span-2">
-          <div class="card">
-            <form @submit.prevent="generateShortUrl" class="space-y-8">
-              <div>
-                <label for="longUrl" class="block text-sm font-medium text-gray-700 mb-2">
-                  Enter your long URL
-                </label>
-                <input
-                  id="longUrl"
-                  type="url"
-                  x-model="longUrl"
-                  placeholder="https://example.com/very-long-url-that-needs-shortening"
-                  class="input-field"
-                  required
-                />
-              </div>
-              
-              <button
-                type="submit"
-                :disabled="isGenerating || !longUrl.trim()"
-                class="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <span x-show="!isGenerating">Shorten URL</span>
-                <span x-show="isGenerating" class="flex items-center justify-center">
-                  <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        <!-- Controls -->
+        <div class="flex items-center space-x-4">
+          <!-- Language Switcher -->
+          <div>
+            <label for="language-switcher" class="sr-only">Language</label>
+            <select id="language-switcher" x-model="$store.i18n.locale" @change="$store.i18n.loadLocale($event.target.value)" class="bg-gray-200 dark:bg-gray-800 rounded-md border-gray-300 dark:border-gray-700 focus:ring-primary">
+              <option value="en">English</option>
+              <option value="fr">Français</option>
+            </select>
+          </div>
+          <!-- Theme Toggle -->
+          <button @click="$store.theme.toggle(!$store.theme.darkMode)" class="p-2 rounded-md bg-gray-200 dark:bg-gray-800" aria-label="Toggle theme">
+            <svg x-show="!$store.theme.darkMode" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+            <svg x-show="$store.theme.darkMode" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+          </button>
+        </div>
+      </header>
+      
+      <main class="card mx-auto w-full max-w-6xl flex-1 flex-col items-center justify-center">
+        <!-- Hero Section -->
+        <section class="text-center mb-12">
+          <div class="space-y-6">
+            <h1 class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+              Shorten URLs Instantly
+            </h1>
+            <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+              Transform long, unwieldy links into clean, shareable URLs with just one click.
+            </p>
+            
+            <div class="space-y-4 max-w-3xl mx-auto">
+              <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Why Choose LinkShort?</h2>
+              <ul class="grid grid-cols-1 md:grid-cols-2 gap-3 text-base text-gray-600 dark:text-gray-300">
+                <li class="flex items-center">
+                  <svg class="w-5 h-5 mr-3 text-secondary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                   </svg>
-                  Generating...
-                </span>
+                  <span>Lightning-fast URL shortening</span>
+                </li>
+                <li class="flex items-center">
+                  <svg class="w-5 h-5 mr-3 text-secondary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  <span>One-click copy to clipboard</span>
+                </li>
+                <li class="flex items-center">
+                  <svg class="w-5 h-5 mr-3 text-secondary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  <span>Local history tracking</span>
+                </li>
+                <li class="flex items-center">
+                  <svg class="w-5 h-5 mr-3 text-secondary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  <span>No registration required</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Main Content Grid -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <!-- URL Shortener Card -->
+          <article class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+            <header class="mb-6">
+              <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Shorten Your URL</h2>
+            </header>
+            
+            <form @submit.prevent="generateShortUrl" class="space-y-6">
+              <div>
+                <label for="longUrl" class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2" x-text="$store.i18n.t('form.label')">Enter URL</label>
+                <input id="longUrl" type="url" x-model="longUrl" :placeholder="$store.i18n.t('form.placeholder')" class="input-field" required placeholder="https://example.com/a-very-long-url-to-shorten" />
+              </div>
+
+              <div x-show="shortUrl" x-transition class="space-y-4">
+                <label for="shortUrl" class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2" x-text="$store.i18n.t('result.title')">Your Shortened URL</label>
+                <div class="flex items-center space-x-2">
+                  <input id="shortUrl" type="text" :value="shortUrl" readonly class="input-field flex-grow" aria-label="Shortened URL" />
+                  <button type="button" @click="copyToClipboard(shortUrl)" class="btn-primary" x-text="isCopied ? $store.i18n.t('copy.copied') : $store.i18n.t('copy.default')">Copy</button>
+                </div>
+              </div>
+
+              <button type="submit" :disabled="isGenerating || !longUrl.trim()" class="btn-primary w-full">
+                <span x-show="!isGenerating" x-text="$store.i18n.t('form.button')">Shorten URL</span>
+                <span x-show="isGenerating" x-text="$store.i18n.t('form.generating')">Generating...</span>
               </button>
             </form>
+          </article>
 
-            <!-- Result -->
-            <div x-show="shortUrl" x-transition class="mt-8 p-4 bg-green-50 border border-green-200 rounded-lg">
+          <!-- History Card -->
+          <article class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+            <header class="mb-6">
               <div class="flex items-center justify-between">
-                <div class="flex-1">
-                  <p class="text-sm font-medium text-green-800 mb-1">Your shortened URL:</p>
-                  <p class="text-green-900 font-mono break-all" x-text="shortUrl"></p>
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-white" x-text="$store.i18n.t('history.title')">Recent Links</h2>
+                <button @click="clearHistory" class="text-sm text-secondary hover:underline" x-text="$store.i18n.t('history.clear')" :disabled="history.length === 0">Clear History</button>
+              </div>
+            </header>
+            
+            <div class="space-y-4 max-h-80 overflow-y-auto pr-2">
+              <template x-if="history.length === 0">
+                <div class="text-center py-8 text-gray-500 dark:text-gray-400">
+                  <svg class="w-12 h-12 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                  </svg>
+                  <p class="text-lg font-medium">No history yet</p>
+                  <p class="text-sm">Your shortened URLs will appear here</p>
                 </div>
-                <button
-                  @click="copyToClipboard"
-                  class="btn-secondary ml-4 flex-shrink-0"
-                  :class="{ 'bg-green-200 text-green-800': isCopied }"
-                >
-                  <span x-show="!isCopied">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              </template>
+              
+              <template x-for="link in history" :key="link.id">
+                <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 flex justify-between items-center">
+                  <div class="min-w-0 flex-1">
+                    <p class="text-sm text-gray-500 dark:text-gray-400 truncate" x-text="link.original"></p>
+                    <p class="font-mono text-primary text-sm" x-text="link.short"></p>
+                  </div>
+                  <button @click="copyToClipboard(link.short)" class="text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary ml-4 flex-shrink-0 p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors" aria-label="Copy short link to clipboard">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
                     </svg>
-                  </span>
-                  <span x-show="isCopied" class="flex items-center">
-                    <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    Copied!
-                  </span>
-                </button>
-              </div>
+                  </button>
+                </div>
+              </template>
             </div>
-          </div>
-        </div>
-
-        <!-- Right Column: History and Ad Space -->
-        <div class="space-y-8 mt-8 lg:mt-0">
-          <!-- History Section -->
-          <div x-show="history.length > 0" x-transition>
-            <div class="card">
-              <div class="flex items-center justify-between mb-4">
-                <h2 class="text-xl font-semibold text-gray-800">Recent Links</h2>
-                <button @click="clearHistory" class="text-sm text-red-600 hover:text-red-800">
-                  Clear History
-                </button>
-              </div>
-              
-              <div class="space-y-4">
-                <template x-for="link in history" :key="link.id">
-                  <div class="p-4 bg-gray-50 rounded-lg border">
-                    <div class="flex items-center justify-between">
-                      <div class="flex-1 min-w-0">
-                        <p class="text-sm text-gray-600 truncate" x-text="link.original"></p>
-                        <p class="text-sm font-mono text-blue-600" x-text="link.short"></p>
-                      </div>
-                      <button
-                        @click="navigator.clipboard.writeText(link.short)"
-                        class="btn-secondary ml-4 flex-shrink-0"
-                      >
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
-                </template>
-              </div>
-            </div>
-          </div>
-
-          <!-- Ad Placeholder -->
-          <div class="card text-center text-gray-500">
-            <p>Ad Space</p>
-            <p class="text-sm">(300x250)</p>
-          </div>
-        </div>
+          </article>
+        </section>
       </main>
     </div>
     <script type="module" src="/src/main.js"></script>

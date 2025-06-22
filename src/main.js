@@ -1,10 +1,52 @@
 import Alpine from 'alpinejs'
 import './style.css'
 
-// Make Alpine available globally
-window.Alpine = Alpine
+// --- Theme Store ---
+Alpine.store('theme', {
+  darkMode: localStorage.getItem('darkMode') === 'true',
 
-// LinkShort App Component
+  init() {
+    this.toggle(this.darkMode);
+  },
+
+  toggle(on) {
+    this.darkMode = on;
+    localStorage.setItem('darkMode', this.darkMode);
+    if (this.darkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }
+});
+
+// --- Internationalization Store ---
+Alpine.store('i18n', {
+  locale: 'en',
+  strings: {},
+
+  async init() {
+    await this.loadLocale(this.locale);
+  },
+
+  async loadLocale(locale) {
+    try {
+      const response = await fetch(`/locales/${locale}.json`);
+      this.strings = await response.json();
+      this.locale = locale;
+      document.documentElement.lang = locale;
+      document.title = this.strings.pageTitle || 'LinkShort';
+    } catch (error) {
+      console.error(`Failed to load locale '${locale}':`, error);
+    }
+  },
+
+  t(key, fallback = '') {
+    return key.split('.').reduce((obj, k) => (obj && obj[k] !== 'undefined') ? obj[k] : key, this.strings);
+  }
+});
+
+// --- Main App Component ---
 Alpine.data('linkShort', () => ({
   longUrl: '',
   shortUrl: '',
@@ -13,65 +55,49 @@ Alpine.data('linkShort', () => ({
   history: [],
   
   init() {
-    // Load history from localStorage
-    this.history = JSON.parse(localStorage.getItem('linkShortHistory') || '[]')
+    this.history = JSON.parse(localStorage.getItem('linkShortHistory') || '[]');
   },
   
   generateShortUrl() {
-    if (!this.longUrl.trim()) return
+    if (!this.longUrl.trim()) return;
+    this.isGenerating = true;
     
-    this.isGenerating = true
-    
-    // Simulate API call delay
     setTimeout(() => {
-      // Generate a random short code
-      const shortCode = this.generateShortCode()
-      this.shortUrl = `${window.location.origin}/${shortCode}`
+      const shortCode = this.generateShortCode();
+      this.shortUrl = `${window.location.host}/${shortCode}`;
       
-      // Add to history
-      const linkData = {
+      this.history.unshift({
         id: Date.now(),
         original: this.longUrl,
         short: this.shortUrl,
         createdAt: new Date().toISOString()
-      }
+      });
       
-      this.history.unshift(linkData)
-      this.saveHistory()
-      
-      this.isGenerating = false
-    }, 1000)
+      this.saveHistory();
+      this.isGenerating = false;
+      this.longUrl = '';
+    }, 1000);
   },
   
   generateShortCode() {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-    let result = ''
-    for (let i = 0; i < 6; i++) {
-      result += chars.charAt(Math.floor(Math.random() * chars.length))
-    }
-    return result
+    return Math.random().toString(36).substr(2, 7);
   },
   
-  copyToClipboard() {
-    if (this.shortUrl) {
-      navigator.clipboard.writeText(this.shortUrl).then(() => {
-        this.isCopied = true
-        setTimeout(() => {
-          this.isCopied = false
-        }, 2000)
-      })
-    }
+  copyToClipboard(textToCopy) {
+    navigator.clipboard.writeText(textToCopy).then(() => {
+      this.isCopied = true;
+      setTimeout(() => this.isCopied = false, 2000);
+    });
   },
   
   saveHistory() {
-    // Keep only last 10 items
-    this.history = this.history.slice(0, 10)
-    localStorage.setItem('linkShortHistory', JSON.stringify(this.history))
+    this.history = this.history.slice(0, 10);
+    localStorage.setItem('linkShortHistory', JSON.stringify(this.history));
   },
   
   clearHistory() {
-    this.history = []
-    localStorage.removeItem('linkShortHistory')
+    this.history = [];
+    localStorage.removeItem('linkShortHistory');
   },
   
   isValidUrl(string) {
@@ -84,5 +110,6 @@ Alpine.data('linkShort', () => ({
   }
 }))
 
-// Start Alpine
-Alpine.start()
+// --- Start Alpine ---
+window.Alpine = Alpine;
+Alpine.start();
