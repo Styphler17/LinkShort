@@ -46,6 +46,55 @@ Alpine.store('i18n', {
   }
 });
 
+// --- Redirect Handler ---
+function handleRedirect() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const redirectCode = urlParams.get('r');
+  
+  if (redirectCode) {
+    const history = JSON.parse(localStorage.getItem('linkShortHistory') || '[]');
+    const link = history.find(item => item.shortCode === redirectCode);
+    
+    if (link) {
+      // Show a brief loading message
+      document.body.innerHTML = `
+        <div style="display: flex; justify-content: center; align-items: center; height: 100vh; font-family: system-ui, sans-serif;">
+          <div style="text-align: center;">
+            <div style="margin-bottom: 1rem;">Redirecting to...</div>
+            <div style="color: #666; font-size: 0.9rem;">${link.original}</div>
+            <div style="margin-top: 1rem;">
+              <a href="${link.original}" style="color: #3b82f6; text-decoration: none;">Click here if not redirected automatically</a>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      // Redirect after a short delay
+      setTimeout(() => {
+        window.location.href = link.original;
+      }, 1500);
+      
+      return true; // Indicates we're handling a redirect
+    } else {
+      // Show error page for invalid code
+      document.body.innerHTML = `
+        <div style="display: flex; justify-content: center; align-items: center; height: 100vh; font-family: system-ui, sans-serif;">
+          <div style="text-align: center;">
+            <div style="margin-bottom: 1rem; color: #ef4444;">Invalid or expired link</div>
+            <div style="color: #666; font-size: 0.9rem;">This shortened URL doesn't exist or has expired.</div>
+            <div style="margin-top: 1rem;">
+              <a href="/" style="color: #3b82f6; text-decoration: none;">Go back to LinkShort</a>
+            </div>
+          </div>
+        </div>
+      `;
+      return true; // Indicates we're handling a redirect (error case)
+    }
+  }
+  
+  return false; // No redirect to handle
+}
+
 // --- Main App Component ---
 Alpine.data('linkShort', () => ({
   longUrl: '',
@@ -64,12 +113,13 @@ Alpine.data('linkShort', () => ({
     
     setTimeout(() => {
       const shortCode = this.generateShortCode();
-      this.shortUrl = `${window.location.host}/${shortCode}`;
+      this.shortUrl = `${window.location.origin}/?r=${shortCode}`;
       
       this.history.unshift({
         id: Date.now(),
         original: this.longUrl,
         short: this.shortUrl,
+        shortCode: shortCode,
         createdAt: new Date().toISOString()
       });
       
@@ -112,4 +162,8 @@ Alpine.data('linkShort', () => ({
 
 // --- Start Alpine ---
 window.Alpine = Alpine;
-Alpine.start();
+
+// Check for redirects before starting Alpine
+if (!handleRedirect()) {
+  Alpine.start();
+}
